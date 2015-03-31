@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import numpy as np
 import cPickle
 import gzip
@@ -15,6 +17,8 @@ import theano.tensor.shared_randomstreams
 from logistic_sgd import LogisticRegression
 from load_data import load_umontreal_data, load_mnist
 
+print 'theano.config.device', theano.config.device
+print 'theano.config.floatX', theano.config.floatX
 
 ##################################
 ## Various activation functions ##
@@ -30,6 +34,10 @@ def Sigmoid(x):
 #### tanh
 def Tanh(x):
     y = T.tanh(x)
+    return(y)
+#### lin
+def Lin(x):
+    y = x
     return(y)
     
 class HiddenLayer(object):
@@ -406,35 +414,36 @@ if __name__ == '__main__':
                   
     dataset = 'data/mnist_batches.npz'
     #dataset = 'data/mnist.pkl.gz'
-
+    
     if len(sys.argv) < 2:
         print "Usage: {0} [dropout|backprop]".format(sys.argv[0])
         exit(1)
-
+    
     elif sys.argv[1] == "dropout":
         dropout = True
         results_file_name = "results_dropout.txt"
-
+    
     elif sys.argv[1] == "backprop":
         dropout = False
         results_file_name = "results_backprop.txt"
-
+    
     else:
         print "I don't know how to '{0}'".format(sys.argv[1])
         exit(1)
 
-    test_mlp(initial_learning_rate=initial_learning_rate,
-             learning_rate_decay=learning_rate_decay,
-             squared_filter_length_limit=squared_filter_length_limit,
-             n_epochs=n_epochs,
-             batch_size=batch_size,
-             layer_sizes=layer_sizes,
-             mom_params=mom_params,
-             activations=activations,
-             dropout=dropout,
-             dropout_rates=dropout_rates,
-             dataset=dataset,
-             results_file_name=results_file_name,
-             use_bias=False,
-             random_seed=random_seed)
+    test_mlp(
+        initial_learning_rate       = initial_learning_rate,
+        learning_rate_decay         = learning_rate_decay,
+        squared_filter_length_limit = squared_filter_length_limit,
+        n_epochs                    = n_epochs,
+        batch_size                  = batch_size,
+        layer_sizes                 = layer_sizes,
+        mom_params                  = mom_params,
+        activations                 = activations,
+        dropout                     = dropout,
+        dropout_rates               = dropout_rates,
+        dataset                     = dataset,
+        results_file_name           = results_file_name,
+        use_bias                    = False,
+        random_seed                 = random_seed)
 
